@@ -33,7 +33,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
-          goose --dir ./sql/schema postgres "$DATABASE_URL" up
+          goose -dir ./sql/schema postgres "$DATABASE_URL" up
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'

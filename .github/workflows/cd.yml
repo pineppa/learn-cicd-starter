@@ -9,23 +9,37 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
 
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up Go
+      - name: Set up Go  
         uses: actions/setup-go@v5
         with:
           go-version: "1.22.0"
-    
+  
       - name: Build the app
         run: ./scripts/buildprod.sh
 
+
+      - name: Check for Sensitive Credentials
+        run: |
+          git diff --exit-code || (echo "Sensitive credentials detected!" && exit 1)
+        
+      - name: Set up Goose  
+        run: go install github.com/pressly/goose/v3/cmd/goose@latest
+
+      - name: run migrations
+        run: goose -dir migrations postgres "$DATABASE_URL" up
+      
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
           credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
-
+    
       - name: 'Set up Cloud SDK'
         uses: 'google-github-actions/setup-gcloud@v2'
 

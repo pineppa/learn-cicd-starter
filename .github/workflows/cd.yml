@@ -32,8 +32,7 @@ jobs:
       - name: Run Migrations
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: |
-          goose -dir ./sql/schema postgres "$DATABASE_URL" up
+        run: ./scripts/migratup.sh
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'

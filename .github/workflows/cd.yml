@@ -30,9 +30,7 @@ jobs:
         run: go install github.com/pressly/goose/v3/cmd/goose@latest
       
       - name: Run Migrations
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: ./scripts/migratup.sh
+        run: ./scripts/migrateup.sh
 
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
